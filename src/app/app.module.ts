@@ -30,6 +30,7 @@ const appRoutes: Routes = [
     redirectTo: '/dashboard',
     pathMatch: 'full'
   },
+  { path: 'product', loadChildren: () => import('./main/product/product.module').then(m => m.ProductModule) },
   {
     path: '**',
     redirectTo: '/pages/miscellaneous/error' //Error 404 - Page not found
@@ -61,8 +62,8 @@ const appRoutes: Routes = [
     // App modules
     LayoutModule,
     //Change is here
-    AdminModule 
+    AdminModule
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
