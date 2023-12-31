@@ -18,7 +18,7 @@ import {
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 
-import { User, Role } from 'app/auth/models';
+import { User, Role } from 'app/api/auth/models';
 
 // Users with role
 const users: User[] = [

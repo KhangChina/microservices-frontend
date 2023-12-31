@@ -6,7 +6,7 @@ import { CoreCommonModule } from '@core/common.module';
 
 import { ContentHeaderModule } from 'app/layout/components/content-header/content-header.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { AuthGuard } from 'app/auth/helpers/auth.guards';
+import { AuthGuard } from 'app/api/auth/helpers/auth.guards';
 const routes : Routes = [
       {
         path: '', canActivate: [AuthGuard],

@@ -5,8 +5,9 @@ import { takeUntil } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { CoreConfigService } from '@core/services/config.service';
-import { Role, User } from 'app/auth/models';
-
+import { Role, User } from 'app/api/auth/models';
+import { AuthenticationService } from 'app/api/auth/service/authentication.service'
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-auth-login-v2',
   templateUrl: './auth-login-v2.component.html',
@@ -36,12 +37,12 @@ export class AuthLoginV2Component implements OnInit {
     private _coreConfigService: CoreConfigService,
     private _formBuilder: FormBuilder,
     private _route: ActivatedRoute,
-    private _router: Router
-
-
+    private _router: Router,
+    private _authenticationServices: AuthenticationService,
+    private _toastrService: ToastrService
   ) {
     this._unsubscribeAll = new Subject();
-   this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
     // Configure the layout
     this._coreConfigService.config = {
@@ -73,10 +74,8 @@ export class AuthLoginV2Component implements OnInit {
     this.passwordTextType = !this.passwordTextType;
   }
 
-  onSubmit() {
+  async onSubmit() {
     this.submitted = true;
-
-    // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
     }
@@ -85,32 +84,41 @@ export class AuthLoginV2Component implements OnInit {
       username: this.loginForm.controls.email.value,
       password: this.loginForm.controls.password.value
     }
-    // this._rest.post(`${environment.apiUrl}/auth/login`, body).then(result => {})
-    //let dataLogin = result["data"] as { accessToken: string, refreshToken: string }
-    //localStorage.setItem('accessToken', dataLogin.accessToken)
-   // localStorage.setItem('refreshToken', dataLogin.refreshToken)
-
-   localStorage.setItem('accessToken', 'accessToken')
-   localStorage.setItem('refreshToken', 'refreshToken')
-
-   let user: User = {
-    id: 1,
-    email:"nguyenkhang1400@gmail.com",
-    full_name: "China",
-    avatar: 'avatar-s-11.jpg',
-    role: Role.Admin
-  }
-  localStorage.setItem('currentUser', JSON.stringify(user));
-  this.currentUserSubject.next(user);
-  this._router.navigate([this.returnUrl]);
-    // Login
     this.loading = true;
-
+    const dataLogin = await this._authenticationServices.login(body.username, body.password)
+    console.log('login services',dataLogin)
+    this.loading = false;
+    
+    if (dataLogin.check === 'OK') {
+      localStorage.setItem('accessToken', dataLogin.data.accessToken)
+      localStorage.setItem('refreshToken', dataLogin.data.refreshToken)
+      let user: User = {
+        id: 1,
+        email: "nguyenkhang1400@gmail.com",
+        full_name: "China",
+        avatar: 'avatar-s-11.jpg',
+        role: Role.Admin
+      }
+      this._toastrService.success(
+        'You have successfully logged in as an ' +
+        user.role +
+        ' user to Identity System. Now you can start to explore. Enjoy! 🎉',
+        '👋 Welcome, ' + user.full_name + '!',
+        { toastClass: 'toast ngx-toastr', closeButton: true }
+      );
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      this.currentUserSubject.next(user);
+      this._router.navigate([this.returnUrl]);
+    }
+    else {
+      this._toastrService.error(
+        'Error: ' + dataLogin.data,
+        'Login Failed !',
+        { toastClass: 'toast ngx-toastr', closeButton: true }
+      );
+    }
+    // Login
   }
-
-  // Lifecycle Hooks
-  // -----------------------------------------------------------------------------------------------------
-
   /**
    * On init
    */
