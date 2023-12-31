@@ -3,8 +3,8 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-product',
-  templateUrl: './sample.component.html',
-  styleUrls: ['./sample.component.scss']
+  templateUrl: './product.component.html',
+  styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
   ngOnInit() {
