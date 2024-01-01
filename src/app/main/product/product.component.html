@@ -1,7 +1,6 @@
 <div class="content-wrapper">
     <div class="content-body">
       <app-content-header [contentHeader]="contentHeader"></app-content-header>
-
       <div class="card">
         <div class="row">
           <div class="col-md-6 col-12">
@@ -50,17 +49,17 @@
                 <table class="table table-hover-animation" *blockUI="'card-section'">
                   <thead>
                     <tr>
+                      <th>ID</th>
                       <th>Name</th>
-                      <th>Email</th>
-                      <th>Phone Number</th>
-                      <th>Verified phone</th>
-                      <th>Verified email</th>
-                      <th>Role</th>
+                      <th>Note</th>
+                      <th>Status</th>
+                      <th>Create</th>
+                      <th>Update</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
   
-                  <tbody *ngIf="lstCategories.length == 0">
+                  <tbody *ngIf="lstProducts.length == 0">
                     <tr>
                       <td valign="top" colspan="8" class="text-center">
                         <span [data-feather]="'shopping-bag'"></span>
@@ -69,9 +68,44 @@
                     </tr>
                   </tbody>
   
-                  <tbody *ngIf="lstCategories.length > 0" >
-                    <tr *ngFor="let category of lstCategories">
-                      
+                  <tbody *ngIf="lstProducts.length > 0" >
+                    <tr *ngFor="let product of lstProducts">
+                      <td>{{ product.ID }}</td>
+                      <td>{{ product.name }}</td>
+                      <td>{{ product.note }}</td>
+                      <td>
+                        <span class="badge badge-pill mr-1" [ngClass]="{
+                          'badge-light-primary': product.status === 'deleted',
+                          'badge-light-danger': product.status === 'deactivate',
+                          'badge-light-success': product.status === 'active'
+                        }">{{product.status}}</span>
+  
+                      </td>
+                      <td>{{ product.create_at }}</td>
+                      <td>{{ product.update_at }}</td>
+                      <td class="overflow-hidden">
+                        <div ngbDropdown container="body">
+                          <button
+                            type="button"
+                            class="btn btn-sm hide-arrow"
+                            ngbDropdownToggle
+                            data-toggle="dropdown"
+                          >
+                            <i data-feather="more-vertical"></i>
+                          </button>
+                          <div ngbDropdownMenu>
+                            <a
+                              ngbDropdownItem
+                              [routerLink]="['/products/products-update', product.ID]"
+                              ><i data-feather="edit-2" class="mr-50"></i
+                              ><span>Edit</span></a
+                            ><a ngbDropdownItem (click)="deleteProduct(product.ID)"
+                              ><i data-feather="trash" class="mr-50"></i
+                              ><span>Delete</span></a
+                            >
+                          </div>
+                        </div>
+                      </td>
                     </tr>
                   </tbody>
   

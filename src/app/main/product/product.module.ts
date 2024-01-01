@@ -8,6 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BlockUIModule } from 'ng-block-ui';
 import { ContentHeaderModule } from 'app/layout/components/content-header/content-header.module';
+import { ProductService } from 'app/api/product/product.service';
 
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [ProductComponent],
+  providers:[ProductService],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
