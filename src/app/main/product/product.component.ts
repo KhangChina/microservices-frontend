@@ -155,6 +155,33 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
   }
   async update() {
+    const product = {
+      name : this.nameProduct,
+      note : this.noteProduct,
+      status : this.selectedStatusOption
+    }
+    const res = await this.productService.update(this.IDProduct,product)
+    if (res.check === "OK") {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Update Success',
+        text: `Update products ID: ${this.IDProduct}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+      await this.loadData()
+    }
+    else {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Update ERROR',
+        text: `Error: ${JSON.stringify(res.data)}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+    }
     this.ngbModalRef.close()
   }
   //#endregion

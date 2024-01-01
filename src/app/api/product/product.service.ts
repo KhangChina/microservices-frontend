@@ -99,5 +99,37 @@ export class ProductService {
         }
       }
   }
-
+  async update(ID: string, product: any)
+  {
+    let data = JSON.stringify({
+      "name": product.name,
+      "note": product.note,
+      "status": product.status
+    });
+    
+    let config = {
+      method: 'patch',
+      maxBodyLength: Infinity,
+      url: `${environment.apiUrl}/product/${ID}`,
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      },
+      data : data
+    };
+    try {
+      const response = await axios(config)
+      if (response.data.statusCode === 200) {
+        return {
+          check: 'OK',
+          data: response.data.data
+        }
+      }
+    } catch (error) {
+      return {
+        check: 'ERROR',
+        data: error.response.data.message
+      }
+    }
+  }
 }
