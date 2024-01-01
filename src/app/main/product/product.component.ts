@@ -93,15 +93,16 @@ export class ProductComponent implements OnInit, AfterViewInit {
   selectedStatusOption = 'active'
   hideAdd: boolean = true
   hideUpdate: boolean = true
-  selectedStatusDisable : boolean = true
+  selectedStatusDisable: boolean = true
   private ngbModalRef: NgbModalRef;
   //#region Add Products
   modalAddOpen(modelName) {
+    this.IDProduct = ""
     this.hideAdd = false
     this.hideUpdate = true
     this.selectedStatusDisable = true
     this.nameProduct = ""
-    this.noteProduct=""
+    this.noteProduct = ""
     this.selectedStatusOption = 'active'
     this.ngbModalRef = this.modalService.open(modelName, {
       centered: true,
@@ -111,8 +112,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
   }
   async create() {
     const res = await this.productService.create(this.nameProduct, this.noteProduct)
-    if(res.check === "OK")
-    {
+    if (res.check === "OK") {
       await Swal.fire({
         icon: 'success',
         title: 'Create Success',
@@ -123,8 +123,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
       })
       await this.loadData()
     }
-    else
-    {
+    else {
       await Swal.fire({
         icon: 'error',
         title: 'Create ERROR',
@@ -135,14 +134,16 @@ export class ProductComponent implements OnInit, AfterViewInit {
       })
     }
     this.ngbModalRef.close()
-   
+
   }
-  
+
   //#endregion 
   //#region Update Product
-  async modalUpdateOpen(modelName,IDProduct)
-  {
-    this.IDProduct = IDProduct
+  async modalUpdateOpen(modelName, product) {
+    this.IDProduct = product.ID
+    this.nameProduct = product.name
+    this.noteProduct = product.note
+    this.selectedStatusOption = product.status
     this.hideAdd = true
     this.hideUpdate = false
     this.selectedStatusDisable = false
@@ -151,7 +152,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
       windowClass: 'modal modal-primary',
       size: 'lg'
     });
-   
+
   }
   async update() {
     this.ngbModalRef.close()

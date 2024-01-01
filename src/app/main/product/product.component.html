@@ -96,7 +96,7 @@
                           <div ngbDropdownMenu>
                             <a
                               ngbDropdownItem
-                              (click)="modalUpdateOpen(modalPrimary,product.ID)"
+                              (click)="modalUpdateOpen(modalPrimary,product)"
                               ><i data-feather="edit-2" class="mr-50"></i
                               ><span>Edit</span></a
                             ><a ngbDropdownItem (click)="deleteProduct(product.ID)"
@@ -144,7 +144,10 @@
 
   <ng-template #modalPrimary let-modal>
     <div class="modal-header">
-      <h5 class="modal-title" id="myModalLabel160">Add Products</h5>
+    
+      <div *ngIf="IDProduct.length>0 then thenBlock else elseBlock"></div>
+      <ng-template #elseBlock><h5 class="modal-title" id="myModalLabel160">Add Products</h5></ng-template>
+      <ng-template #thenBlock><h5 class="modal-title" id="myModalLabel160">Update Products: {{IDProduct}}</h5></ng-template>
       <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
