@@ -2,7 +2,8 @@ import { AfterViewInit, Component, OnInit, ViewEncapsulation } from '@angular/co
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ProductService } from 'app/api/product/product.service';
 import { ToastrService } from 'ngx-toastr';
-
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -32,7 +33,8 @@ export class ProductComponent implements OnInit, AfterViewInit {
   }
   constructor(
     private productService: ProductService,
-    private toastrService : ToastrService
+    private toastrService: ToastrService,
+    private modalService: NgbModal,
   ) { }
   public selectedOption = 10;
   public searchValue
@@ -40,13 +42,11 @@ export class ProductComponent implements OnInit, AfterViewInit {
   public totalPages = 1;
   public lstProducts = []
   public contentHeader: object
-  public data : any
+  public data: any
   @BlockUI('card-section') cardBlockUI: NgBlockUI;
-  async loadData()
-  {
-    this.data = await this.productService.getAll(this.selectedOption,this.pageCurrent,this.searchValue)
-    if(this.data.check === "ERROR")
-    {
+  async loadData() {
+    this.data = await this.productService.getAll(this.selectedOption, this.pageCurrent, this.searchValue)
+    if (this.data.check === "ERROR") {
       this.lstProducts = []
       this.toastrService.error(
         'Error: ' + this.data.data,
@@ -54,13 +54,12 @@ export class ProductComponent implements OnInit, AfterViewInit {
         { toastClass: 'toast ngx-toastr', closeButton: true }
       );
     }
-    else
-    {
+    else {
       this.lstProducts = this.data.data.items
       this.totalPages = this.data.data.meta.totalPages * 10
-    } 
+    }
   }
-  async ngAfterViewInit(){
+  async ngAfterViewInit() {
     await this.loadData()
   }
   filterByRole(event) {
@@ -79,13 +78,84 @@ export class ProductComponent implements OnInit, AfterViewInit {
     // this.selectedRole = this.selectRole[0];
     // this.selectedStatus = this.selectStatus[0];
   }
-  async deleteProduct(id)
-  {
+  async deleteProduct(id) {
     console.log(id)
   }
   async clickPagination() {
     this.cardBlockUI.start()
     await this.loadData()
     this.cardBlockUI.stop()
-  } 
+  }
+  IDProduct: string
+  nameProduct: string
+  noteProduct: string
+  status: string
+  selectedStatusOption = 'active'
+  hideAdd: boolean = true
+  hideUpdate: boolean = true
+  selectedStatusDisable : boolean = true
+  private ngbModalRef: NgbModalRef;
+  //#region Add Products
+  modalAddOpen(modelName) {
+    this.hideAdd = false
+    this.hideUpdate = true
+    this.selectedStatusDisable = true
+    this.nameProduct = ""
+    this.noteProduct=""
+    this.selectedStatusOption = 'active'
+    this.ngbModalRef = this.modalService.open(modelName, {
+      centered: true,
+      windowClass: 'modal modal-primary',
+      size: 'lg'
+    });
+  }
+  async create() {
+    const res = await this.productService.create(this.nameProduct, this.noteProduct)
+    if(res.check === "OK")
+    {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Create Success',
+        text: `Create products ID: ${res.data.ID}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+      await this.loadData()
+    }
+    else
+    {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Create ERROR',
+        text: `Error: ${JSON.stringify(res.data)}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+    }
+    this.ngbModalRef.close()
+   
+  }
+  
+  //#endregion 
+  //#region Update Product
+  async modalUpdateOpen(modelName,IDProduct)
+  {
+    this.IDProduct = IDProduct
+    this.hideAdd = true
+    this.hideUpdate = false
+    this.selectedStatusDisable = false
+    this.ngbModalRef = this.modalService.open(modelName, {
+      centered: true,
+      windowClass: 'modal modal-primary',
+      size: 'lg'
+    });
+   
+  }
+  async update() {
+    this.ngbModalRef.close()
+  }
+  //#endregion
+
 }

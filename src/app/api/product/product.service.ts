@@ -42,7 +42,7 @@ export class ProductService {
   /**
    * Get user by id
    */
-  async getById(id: number) {
+  async getById(id: string) {
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
@@ -67,7 +67,7 @@ export class ProductService {
       }
   }
   //status: active, deactivate, deleted
-  async create(name : string, note : string, status: string)
+  async create(name : string, note : string)
   {
     let data = JSON.stringify({
         "name": name,

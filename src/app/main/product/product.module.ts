@@ -10,7 +10,6 @@ import { BlockUIModule } from 'ng-block-ui';
 import { ContentHeaderModule } from 'app/layout/components/content-header/content-header.module';
 import { ProductService } from 'app/api/product/product.service';
 
-
 const routes: Routes = [
   { path: '', component: ProductComponent }
 ];
