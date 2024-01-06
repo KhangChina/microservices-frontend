@@ -6,7 +6,7 @@ export class UserService {
   constructor() { }
 
   /**
-   * Get all product
+   * Get all user
    */
   async getAll(per_page: number, page: number, search: any) {
 

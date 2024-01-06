@@ -71,22 +71,6 @@ export class ProductComponent implements OnInit, AfterViewInit {
   async ngAfterViewInit() {
     await this.loadData()
   }
-  filterByRole(event) {
-    const filter = event.value;
-  }
-  filterByStatus(event) {
-    const filter = event.value;
-  }
-
-  filterRows(roleFilter, planFilter, statusFilter) {
-    // Reset search on select change
-    this.searchValue = ''
-  }
-  filterUpdate(event) {
-    // Reset ng-select on search
-    // this.selectedRole = this.selectRole[0];
-    // this.selectedStatus = this.selectStatus[0];
-  }
   async clickPagination() {
     this.cardBlockUI.start()
     await this.loadData()
