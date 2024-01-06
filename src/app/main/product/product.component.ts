@@ -78,9 +78,6 @@ export class ProductComponent implements OnInit, AfterViewInit {
     // this.selectedRole = this.selectRole[0];
     // this.selectedStatus = this.selectStatus[0];
   }
-  async deleteProduct(id) {
-    console.log(id)
-  }
   async clickPagination() {
     this.cardBlockUI.start()
     await this.loadData()
@@ -156,11 +153,11 @@ export class ProductComponent implements OnInit, AfterViewInit {
   }
   async update() {
     const product = {
-      name : this.nameProduct,
-      note : this.noteProduct,
-      status : this.selectedStatusOption
+      name: this.nameProduct,
+      note: this.noteProduct,
+      status: this.selectedStatusOption
     }
-    const res = await this.productService.update(this.IDProduct,product)
+    const res = await this.productService.update(this.IDProduct, product)
     if (res.check === "OK") {
       await Swal.fire({
         icon: 'success',
@@ -186,4 +183,47 @@ export class ProductComponent implements OnInit, AfterViewInit {
   }
   //#endregion
 
+  //#region Delete Products
+  async deleteProduct(id) {
+
+    let data = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7367F0',
+      cancelButtonColor: '#E42728',
+      confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-danger ml-1'
+      }
+    })
+    if (data.isConfirmed) {
+      const res = await this.productService.delete(id)
+      if (res.check === "OK") {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Create Success',
+          text: `Create products ID: ${res.data.ID}`,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        })
+        await this.loadData()
+      }
+      else {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Delete ERROR',
+          text: `Error: ${JSON.stringify(res.data)}`,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        })
+      }
+
+    }
+  }
+  //#region 
 }
