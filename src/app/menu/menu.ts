@@ -17,4 +17,12 @@ export const menu: CoreMenu[] = [
     icon: 'package',
     url: 'product'
   },
+  {
+    id: 'user',
+    title: 'User',
+    translate: 'MENU.USER',
+    type: 'item',
+    icon: 'user',
+    url: 'user'
+  },
 ]
