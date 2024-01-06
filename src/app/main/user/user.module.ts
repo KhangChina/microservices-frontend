@@ -9,14 +9,18 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { BlockUIModule } from 'ng-block-ui';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from 'app/api/user/user.service';
+import { UserEditComponent } from './user-edit/user-edit.component';
+import { AuthGuard } from 'app/api/auth/helpers/auth.guards';
 
 
 const routes: Routes = [
-  { path: '', component: UserComponent }
+  { path: '', component: UserComponent, canActivate: [AuthGuard]},
+  { path: 'edit/:id', component: UserEditComponent ,canActivate: [AuthGuard]},
+  { path: 'add', component: UserEditComponent ,canActivate: [AuthGuard]}
 ];
 
 @NgModule({
-  declarations: [UserComponent],
+  declarations: [UserComponent, UserEditComponent],
   providers:[UserService],
   imports: [
     CommonModule,

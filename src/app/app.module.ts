@@ -18,6 +18,7 @@ import { coreConfig } from 'app/app-config';
 import { AppComponent } from 'app/app.component';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AdminModule } from './main/admin/admin.module';
+import { AuthGuard } from './api/auth/helpers/auth.guards';
 // import { SampleModule } from 'app/main/sample/sample.module';
 
 const appRoutes: Routes = [
@@ -28,9 +29,9 @@ const appRoutes: Routes = [
   {
     path: '',
     redirectTo: '/dashboard',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
-  { path: 'product', loadChildren: () => import('./main/product/product.module').then(m => m.ProductModule) },
+  { path: 'product', loadChildren: () => import('./main/product/product.module').then(m => m.ProductModule)},
   { path: 'user', loadChildren: () => import('./main/user/user.module').then(m => m.UserModule) },
   {
     path: '**',
