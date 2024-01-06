@@ -4,6 +4,8 @@ import { ProductService } from 'app/api/product/product.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { debounceTime } from 'rxjs/operators'
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -30,6 +32,13 @@ export class ProductComponent implements OnInit, AfterViewInit {
         ]
       }
     }
+    this.searchTerms.pipe(
+      debounceTime(500)
+    ).subscribe(async value => {
+      console.log(value)
+      await this.loadData()
+    });
+
   }
   constructor(
     private productService: ProductService,
@@ -182,7 +191,6 @@ export class ProductComponent implements OnInit, AfterViewInit {
     this.ngbModalRef.close()
   }
   //#endregion
-
   //#region Delete Products
   async deleteProduct(id) {
 
@@ -225,5 +233,11 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
     }
   }
-  //#region 
+  //#endregion 
+  //#region search
+  searchTerms = new Subject<string>();
+  async searchAction(event) {
+    this.searchTerms.next(event.term)
+  }
+  //#endregion
 }
