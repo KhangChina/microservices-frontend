@@ -204,8 +204,8 @@ export class ProductComponent implements OnInit, AfterViewInit {
       if (res.check === "OK") {
         await Swal.fire({
           icon: 'success',
-          title: 'Create Success',
-          text: `Create products ID: ${res.data.ID}`,
+          title: 'Delete Success',
+          text: `Delete products ID: ${id}`,
           customClass: {
             confirmButton: 'btn btn-success'
           }
