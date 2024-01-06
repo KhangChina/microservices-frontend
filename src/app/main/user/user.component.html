@@ -1,0 +1,168 @@
+<div class="content-wrapper">
+  <div class="content-body">
+    <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+    <div class="card">
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <div class="d-flex justify-content-between align-items-center m-1">
+            <label class="d-flex align-items-center"
+              >Show
+              <select
+                class="form-control mx-25"
+                [(ngModel)]="selectedOption"
+                (change)="(loadData)"
+              >
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="40">40</option>
+                <option value="60">60</option>
+              </select>
+              entries</label
+            >
+          </div>
+        </div>
+        <div
+          class="col-md-6 col-12 d-flex justify-content-start justify-content-md-end"
+        >
+          <div
+            class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0"
+          >
+            <label class="d-flex align-items-center ml-1 ml-md-0"
+              >Search:<input
+                [(ngModel)]="searchValue"
+                name="searchValue"
+                type="text"
+                class="form-control ml-25"
+                (ngModelChange)="searchAction($event)"
+            /></label>
+            <a
+              class="btn btn-primary ml-1"
+              rippleEffect
+              [routerLink]="['/user', 'add']"
+            >
+              <i
+                data-feather="plus"
+                class="d-sm-none d-inline-block mr-0 mr-sm-1"
+              ></i
+              ><span class="d-none d-sm-inline-block">Add New User</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Table Hover Animation -->
+      <div class="row" id="table-hover-animation">
+        <div class="col-12">
+          <div class="card">
+            <div class="table-responsive">
+              <table
+                class="table table-hover-animation"
+                *blockUI="'card-section'"
+              >
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Verified Email</th>
+                    <th>Verified Phone</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody *ngIf="lstUser.length == 0">
+                  <tr>
+                    <td valign="top" colspan="8" class="text-center">
+                      <span [data-feather]="'shopping-bag'"></span>
+                      No data...
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tbody *ngIf="lstUser.length > 0">
+                  <tr *ngFor="let user of lstUser">
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.full_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.verified_email }}</td>
+                    <td>{{ user.verified_phone }}</td>
+                    <td>
+                      <span
+                        class="badge badge-pill mr-1"
+                        [ngClass]="{
+                          'badge-light-primary': user.status === 'deleted',
+                          'badge-light-danger': user.status === 'deactivate',
+                          'badge-light-success': user.status === 'active'
+                        }"
+                        >{{ user.status }}</span
+                      >
+                    </td>
+                    <td class="overflow-hidden">
+                      <div ngbDropdown container="body">
+                        <button
+                          type="button"
+                          class="btn btn-sm hide-arrow"
+                          ngbDropdownToggle
+                          data-toggle="dropdown"
+                        >
+                          <i data-feather="more-vertical"></i>
+                        </button>
+                        <div ngbDropdownMenu>
+                          <a
+                            ngbDropdownItem
+                            [routerLink]="['/user/edit', user.ID]"
+                            ><i data-feather="edit-2" class="mr-50"></i
+                            ><span>Edit</span></a
+                          >
+                          <a ngbDropdownItem (click)="resetPass(user.ID)"
+                            ><i data-feather="refresh-ccw" class="mr-50"></i
+                            ><span>Reset Pass for Normal</span></a
+                          >
+                          <a ngbDropdownItem (click)="resetPass(user.ID)"
+                            ><i data-feather="refresh-ccw" class="mr-50"></i
+                            ><span>Reset Pass for Mail</span></a
+                          >
+                          <a ngbDropdownItem (click)="delete(user.ID)"
+                            ><i data-feather="trash" class="mr-50"></i
+                            ><span>Delete</span></a
+                          >
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--/ Table Hover Animation -->
+
+      <ngb-pagination
+        [collectionSize]="totalPages"
+        [(page)]="pageCurrent"
+        (pageChange)="clickPagination()"
+        aria-label="Default pagination"
+        class="d-flex justify-content-center"
+      >
+        <ng-template ngbPaginationPrevious
+          ><span
+            [data-feather]="'chevron-left'"
+            [size]="18"
+            [class]="'font-weight-bolder'"
+          ></span>
+        </ng-template>
+        <ng-template ngbPaginationNext
+          ><span
+            [data-feather]="'chevron-right'"
+            [size]="18"
+            [class]="'font-weight-bolder'"
+          ></span
+        ></ng-template>
+      </ngb-pagination>
+    </div>
+  </div>
+</div>
