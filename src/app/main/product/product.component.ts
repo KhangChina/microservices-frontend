@@ -177,7 +177,6 @@ export class ProductComponent implements OnInit, AfterViewInit {
   //#endregion
   //#region Delete Products
   async deleteProduct(id) {
-
     let data = await Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -214,7 +213,6 @@ export class ProductComponent implements OnInit, AfterViewInit {
           }
         })
       }
-
     }
   }
   //#endregion 
