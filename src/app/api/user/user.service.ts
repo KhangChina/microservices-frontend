@@ -67,20 +67,20 @@ export class UserService {
     }
   }
   //status: active, deactivate, deleted
-  async create(name: string, note: string) {
-    let data = JSON.stringify({
-      "name": name,
-      "note": note
-    });
+  async create(data) {
+    // let data = JSON.stringify({
+    //   "name": name,
+    //   "note": note
+    // });
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${environment.apiUrl}/user/`,
+      url: `${environment.apiUrl}/user/product/${environment.productID}`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       },
-      data: data
+      data
     };
 
     try {
