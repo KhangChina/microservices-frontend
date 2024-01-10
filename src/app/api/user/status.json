@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Active",
+        "value": "active"
+    },
+    {
+        "name": "Deactivate",
+        "value": "deactivate"
+    },
+    {
+        "name": "Deleted",
+        "value": "deleted"
+    }
+]

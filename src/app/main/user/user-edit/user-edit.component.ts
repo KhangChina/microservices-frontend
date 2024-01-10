@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { UserService } from 'app/api/user/user.service';
 import Swal from 'sweetalert2';
-
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
@@ -112,6 +111,11 @@ export class UserEditComponent implements OnInit {
     this.validUsername = ""
   }
   async validate() {
+    this.validPhone()
+    this.validMail()
+    this.validatePassword()
+    this.validateRePassword()
+    this.validateUser()
     if (this.validEmail.length > 0) {
       await Swal.fire({
         icon: 'error',
@@ -171,6 +175,7 @@ export class UserEditComponent implements OnInit {
   }
   //#endregion 
   async ngOnInit() {
+    this.selectStatus = await this.userService.getUserStatus()
     this.urlLastValue = this.url.substring(this.url.lastIndexOf('/') + 1);
     if (!isNaN(Number(this.urlLastValue))) {
       //Init layout
@@ -232,15 +237,16 @@ export class UserEditComponent implements OnInit {
       this.email = res.data.email
       this.username = res.data.username
       if (res.data.phone.startsWith('+84')) {
-        this.phone_number = res.data.phone.replace('+84', '0');
-      } else {
-        this.phone_number = res.data.phone;
+        this.phone_number = res.data.phone.replace('+84', '')
       }
       this.verified_email = res.data.verified_email
       this.verified_phone = res.data.verified_phone
       //Show button
       this.btnCreateHide = true
       this.btnUpdateHide = false
+      this.status = res.data.status
+      this.textPassHide = true
+      this.textRepassHide = true
     }
     else {
       await Swal.fire({
@@ -267,7 +273,6 @@ export class UserEditComponent implements OnInit {
     const nameParts = fullName.split(' ');
     this.last_name = nameParts.pop() || '';
     this.first_name = nameParts.join(' ');
-    //return { firstName, lastName };
   }
 
   //#region  create user
@@ -313,13 +318,14 @@ export class UserEditComponent implements OnInit {
   }
   //#endregion
   async update() {
-    // console.log("Update data!")
     const data = {
+      username: this.username,
       full_name: this.first_name + " " + this.last_name,
       email: this.email,
       phone: "+84" + this.phone_number,
       verified_phone: this.verified_phone,
-      verified_email: this.verified_email
+      verified_email: this.verified_email,
+      status: this.status
     }
     this.isLoading = true
     const res = await this.userService.update(this.ID, data)

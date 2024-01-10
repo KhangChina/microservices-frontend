@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import axios from 'axios'
+import userStatus from './status.json'
 @Injectable({ providedIn: 'root' })
 export class UserService {
   constructor() { }
@@ -154,5 +155,9 @@ export class UserService {
         data: error.response.data.message
       }
     }
+  }
+  async getUserStatus()
+  {
+    return userStatus
   }
 }
