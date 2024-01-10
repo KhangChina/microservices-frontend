@@ -98,12 +98,12 @@ export class UserService {
       }
     }
   }
-  async update(ID: string, product: any) {
-    let data = JSON.stringify({
-      "name": product.name,
-      "note": product.note,
-      "status": product.status
-    });
+  async update(ID: string, data: any) {
+    // let data = JSON.stringify({
+    //   "name": product.name,
+    //   "note": product.note,
+    //   "status": product.status
+    // });
 
     let config = {
       method: 'patch',
@@ -113,7 +113,7 @@ export class UserService {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       },
-      data: data
+     data
     };
     try {
       const response = await axios(config)

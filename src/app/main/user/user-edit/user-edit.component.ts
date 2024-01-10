@@ -231,10 +231,10 @@ export class UserEditComponent implements OnInit {
       //Get data from API
       this.email = res.data.email
       this.username = res.data.username
-      if (res.data.phone_number.startsWith('+84')) {
-        this.phone_number = res.data.phone_number.replace('+84', '0');
+      if (res.data.phone.startsWith('+84')) {
+        this.phone_number = res.data.phone.replace('+84', '0');
       } else {
-        this.phone_number = res.data.phone_number;
+        this.phone_number = res.data.phone;
       }
       this.verified_email = res.data.verified_email
       this.verified_phone = res.data.verified_phone
@@ -245,7 +245,7 @@ export class UserEditComponent implements OnInit {
     else {
       await Swal.fire({
         icon: 'error',
-        title: 'Create ERROR',
+        title: 'Update ERROR',
         text: `Error: ${JSON.stringify(res.data)}`,
         customClass: {
           confirmButton: 'btn btn-success'
@@ -312,8 +312,8 @@ export class UserEditComponent implements OnInit {
     }
   }
   //#endregion
-  update() {
-    console.log("Update data!")
+  async update() {
+    // console.log("Update data!")
     const data = {
       full_name: this.first_name + " " + this.last_name,
       email: this.email,
@@ -321,9 +321,29 @@ export class UserEditComponent implements OnInit {
       verified_phone: this.verified_phone,
       verified_email: this.verified_email
     }
-    console.log(data)
-
-
-
+    this.isLoading = true
+    const res = await this.userService.update(this.ID, data)
+    this.isLoading = false
+    if (res.check === "OK") {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Update Success',
+        text: `Create User ID: ${this.ID}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+      //this.router.navigate(['/user']);
+    } else {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Update ERROR',
+        text: `Error: ${JSON.stringify(res.data)}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+    }
+    //console.log(data)
   }
 }
