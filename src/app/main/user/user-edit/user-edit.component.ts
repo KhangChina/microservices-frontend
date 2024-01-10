@@ -36,7 +36,7 @@ export class UserEditComponent implements OnInit {
   role: string = "customer"
   send_mail: string = ""
   last_name: string = ""
-  first_name: string = "Unknown"
+  first_name: string = ""
   birthday: string = ""
   avatarImage: string = "";
   avatarImageID: string = ""
@@ -45,6 +45,7 @@ export class UserEditComponent implements OnInit {
   validPhone_number = ""
   validRePassword = ""
   validPassword = ""
+  validUsername = ""
   //Control UI Update
   btnCreateHide: boolean = false
   textPassHide: boolean = false
@@ -72,8 +73,6 @@ export class UserEditComponent implements OnInit {
       return
     }
     this.validPhone_number = ""
-    this.username = this.phone_number
-
   }
   validMail() {
     if (this.email.length === 0) {
@@ -105,11 +104,18 @@ export class UserEditComponent implements OnInit {
     }
     this.validRePassword = ""
   }
+  validateUser() {
+    if (this.username.length === 0) {
+      this.validUsername = "User is not blank !"
+      return
+    }
+    this.validUsername = ""
+  }
   async validate() {
     if (this.validEmail.length > 0) {
       await Swal.fire({
         icon: 'error',
-        title: 'Create ERROR',
+        title: 'Validate ERROR',
         text: `Error: ${this.validEmail}`,
         customClass: {
           confirmButton: 'btn btn-success'
@@ -120,7 +126,7 @@ export class UserEditComponent implements OnInit {
     if (this.validPhone_number.length > 0) {
       await Swal.fire({
         icon: 'error',
-        title: 'Create ERROR',
+        title: 'Validate ERROR',
         text: `Error: ${this.validPhone_number}`,
         customClass: {
           confirmButton: 'btn btn-success'
@@ -131,7 +137,7 @@ export class UserEditComponent implements OnInit {
     if (this.validPassword.length > 0) {
       await Swal.fire({
         icon: 'error',
-        title: 'Create ERROR',
+        title: 'Validate ERROR',
         text: `Error: ${this.validPassword}`,
         customClass: {
           confirmButton: 'btn btn-success'
@@ -142,7 +148,7 @@ export class UserEditComponent implements OnInit {
     if (this.validRePassword.length > 0) {
       await Swal.fire({
         icon: 'error',
-        title: 'Create ERROR',
+        title: 'Validate ERROR',
         text: `Error: ${this.validRePassword}`,
         customClass: {
           confirmButton: 'btn btn-success'
@@ -150,11 +156,11 @@ export class UserEditComponent implements OnInit {
       })
       return true
     }
-    if (this.username.length == 0) {
+    if (this.validUsername.length == 0) {
       await Swal.fire({
         icon: 'error',
-        title: 'Create ERROR',
-        text: `Error: User not empty`,
+        title: 'Validate ERROR',
+        text: `Error: ${this.validUsername}`,
         customClass: {
           confirmButton: 'btn btn-success'
         }
@@ -164,10 +170,11 @@ export class UserEditComponent implements OnInit {
     return false
   }
   //#endregion 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.urlLastValue = this.url.substring(this.url.lastIndexOf('/') + 1);
     if (!isNaN(Number(this.urlLastValue))) {
-      // await this.getUserUpdateInit(this.urlLastValue)
+      //Init layout
+      await this.UIUserUpdateInit(this.urlLastValue)
       this.ID = this.urlLastValue
       this.contentHeader = {
         headerTitle: 'User',
@@ -193,6 +200,8 @@ export class UserEditComponent implements OnInit {
       };
     }
     else {
+      //Init layout
+      await this.UIUserCreateInit()
       this.contentHeader = {
         headerTitle: 'User',
         actionButton: false,
@@ -213,9 +222,54 @@ export class UserEditComponent implements OnInit {
         }
       };
     }
-    // content header
-
   }
+  async UIUserUpdateInit(IDUser: any) {
+    const res = await this.userService.getById(IDUser)
+    if (res.check === "OK") {
+      //Detach first_name and last_name
+      this.splitName(res.data.full_name)
+      //Get data from API
+      this.email = res.data.email
+      this.username = res.data.username
+      if (res.data.phone_number.startsWith('+84')) {
+        this.phone_number = res.data.phone_number.replace('+84', '0');
+      } else {
+        this.phone_number = res.data.phone_number;
+      }
+      this.verified_email = res.data.verified_email
+      this.verified_phone = res.data.verified_phone
+      //Show button
+      this.btnCreateHide = true
+      this.btnUpdateHide = false
+    }
+    else {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Create ERROR',
+        text: `Error: ${JSON.stringify(res.data)}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+    }
+  }
+  async UIUserCreateInit() {
+    this.btnCreateHide = false
+    this.btnUpdateHide = true
+    this.last_name = ""
+    this.first_name = ""
+    this.phone_number = ""
+    this.email = ""
+    this.verified_email = false
+    this.verified_phone = false
+  }
+  splitName(fullName: string) {
+    const nameParts = fullName.split(' ');
+    this.last_name = nameParts.pop() || '';
+    this.first_name = nameParts.join(' ');
+    //return { firstName, lastName };
+  }
+
   //#region  create user
   username: string = ""
   async create() {
@@ -256,12 +310,20 @@ export class UserEditComponent implements OnInit {
         }
       })
     }
-
-
-
   }
   //#endregion
   update() {
     console.log("Update data!")
+    const data = {
+      full_name: this.first_name + " " + this.last_name,
+      email: this.email,
+      phone: "+84" + this.phone_number,
+      verified_phone: this.verified_phone,
+      verified_email: this.verified_email
+    }
+    console.log(data)
+
+
+
   }
 }
