@@ -166,7 +166,7 @@
                           </div>
                         </div>
                         <div class="col-md-4">
-                          <div class="form-group">
+                          <!-- <div class="form-group">
                             <label for="last_name">User Name</label>
                             <input
                               type="text"
@@ -177,7 +177,38 @@
                               id="username"
                             />
                             <div class="invalid-feedback">{{ validUsername }}</div>
+                          </div> -->
+                          <div class="form-group">
+                            <label for="last_name">User Name</label>
+
+                            <div class="input-group">
+                              <div ngbDropdown class="input-group-prepend">
+                                <button
+                                  type="button"
+                                  class="btn btn-outline-primary"
+                                  ngbDropdownToggle
+                                  data-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false"
+                                  rippleEffect
+                                >
+                                <i data-feather="zap"></i>
+                                </button>
+                                <div ngbDropdownMenu>
+                                  <a ngbDropdownItem (click)="onChaneUserName('name')">Name</a>
+                                  <a ngbDropdownItem (click)="onChaneUserName('phone')">Phone</a>
+                                  <a ngbDropdownItem (click)="onChaneUserName('mail')">Mail</a>
+                                </div>
+                              </div>
+                              <input type="text" 
+                              [(ngModel)]="username"  
+                              name="username"
+                              id="username" 
+                              class="form-control" placeholder="User name" />
+                            </div>
+
                           </div>
+                          
                         </div>
                         <div class="col-md-4">
                           <div class="form-group">

@@ -120,7 +120,7 @@ export class UserEditComponent implements OnInit {
       await Swal.fire({
         icon: 'error',
         title: 'Validate ERROR',
-        text: `Error: ${this.validEmail}`,
+        text: `Error validEmail: ${this.validEmail}`,
         customClass: {
           confirmButton: 'btn btn-success'
         }
@@ -131,7 +131,7 @@ export class UserEditComponent implements OnInit {
       await Swal.fire({
         icon: 'error',
         title: 'Validate ERROR',
-        text: `Error: ${this.validPhone_number}`,
+        text: `Error validPhone_number: ${this.validPhone_number}`,
         customClass: {
           confirmButton: 'btn btn-success'
         }
@@ -142,7 +142,7 @@ export class UserEditComponent implements OnInit {
       await Swal.fire({
         icon: 'error',
         title: 'Validate ERROR',
-        text: `Error: ${this.validPassword}`,
+        text: `Error validPassword: ${this.validPassword}`,
         customClass: {
           confirmButton: 'btn btn-success'
         }
@@ -153,18 +153,18 @@ export class UserEditComponent implements OnInit {
       await Swal.fire({
         icon: 'error',
         title: 'Validate ERROR',
-        text: `Error: ${this.validRePassword}`,
+        text: `Error validRePassword: ${this.validRePassword}`,
         customClass: {
           confirmButton: 'btn btn-success'
         }
       })
       return true
     }
-    if (this.validUsername.length == 0) {
+    if (this.validUsername.length > 0) {
       await Swal.fire({
         icon: 'error',
         title: 'Validate ERROR',
-        text: `Error: ${this.validUsername}`,
+        text: `Error validUsername: ${this.validUsername}`,
         customClass: {
           confirmButton: 'btn btn-success'
         }
@@ -351,5 +351,19 @@ export class UserEditComponent implements OnInit {
       })
     }
     //console.log(data)
+  }
+
+  onChaneUserName(type : string)
+  {
+    if(type==='phone')
+      this.username = this.phone_number
+    else if(type === 'mail')
+    {
+      this.username = this.email
+    }
+    else
+    {
+      this.username = 'hello_kitty'
+    }
   }
 }
