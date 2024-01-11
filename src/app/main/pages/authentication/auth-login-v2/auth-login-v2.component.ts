@@ -86,7 +86,6 @@ export class AuthLoginV2Component implements OnInit {
     }
     this.loading = true;
     const dataLogin = await this._authenticationServices.login(body.username, body.password)
-    console.log('login services',dataLogin)
     this.loading = false;
     
     if (dataLogin.check === 'OK') {

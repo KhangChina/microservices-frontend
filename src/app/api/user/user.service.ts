@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import axios from 'axios'
+import userStatus from './status.json'
 @Injectable({ providedIn: 'root' })
 export class UserService {
   constructor() { }
@@ -67,20 +68,20 @@ export class UserService {
     }
   }
   //status: active, deactivate, deleted
-  async create(name: string, note: string) {
-    let data = JSON.stringify({
-      "name": name,
-      "note": note
-    });
+  async create(data) {
+    // let data = JSON.stringify({
+    //   "name": name,
+    //   "note": note
+    // });
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${environment.apiUrl}/user/`,
+      url: `${environment.apiUrl}/user/product/${environment.productID}`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       },
-      data: data
+      data
     };
 
     try {
@@ -98,12 +99,12 @@ export class UserService {
       }
     }
   }
-  async update(ID: string, product: any) {
-    let data = JSON.stringify({
-      "name": product.name,
-      "note": product.note,
-      "status": product.status
-    });
+  async update(ID: string, data: any) {
+    // let data = JSON.stringify({
+    //   "name": product.name,
+    //   "note": product.note,
+    //   "status": product.status
+    // });
 
     let config = {
       method: 'patch',
@@ -113,7 +114,7 @@ export class UserService {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       },
-      data: data
+     data
     };
     try {
       const response = await axios(config)
@@ -154,5 +155,9 @@ export class UserService {
         data: error.response.data.message
       }
     }
+  }
+  async getUserStatus()
+  {
+    return userStatus
   }
 }

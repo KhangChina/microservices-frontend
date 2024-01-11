@@ -18,7 +18,8 @@
       "@core": ["@core/"],
       "@fake-db": ["@fake-db/"],
       "environments": ["environments/"]
-    }
+    },
+    "resolveJsonModule": true
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": false,

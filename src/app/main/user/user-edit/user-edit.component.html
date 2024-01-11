@@ -133,7 +133,7 @@
   
                         <div class="col-md-4">
                           <div class="form-group">
-                            <label for="status">Phone Number</label>
+                            <label for="phone_number">Phone Number</label>
                             <div class="input-group">
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1"
@@ -165,10 +165,54 @@
                             </div>
                           </div>
                         </div>
-  
+                        <div class="col-md-4">
+                          <!-- <div class="form-group">
+                            <label for="last_name">User Name</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="User Name"
+                              [(ngModel)]="username"
+                              name="username"
+                              id="username"
+                            />
+                            <div class="invalid-feedback">{{ validUsername }}</div>
+                          </div> -->
+                          <div class="form-group">
+                            <label for="last_name">User Name</label>
+
+                            <div class="input-group">
+                              <div ngbDropdown class="input-group-prepend">
+                                <button
+                                  type="button"
+                                  class="btn btn-outline-primary"
+                                  ngbDropdownToggle
+                                  data-toggle="dropdown"
+                                  aria-haspopup="true"
+                                  aria-expanded="false"
+                                  rippleEffect
+                                >
+                                <i data-feather="zap"></i>
+                                </button>
+                                <div ngbDropdownMenu>
+                                  <a ngbDropdownItem (click)="onChangeUserName('name')">Name</a>
+                                  <a ngbDropdownItem (click)="onChangeUserName('phone')">Phone</a>
+                                  <a ngbDropdownItem (click)="onChangeUserName('mail')">Mail</a>
+                                </div>
+                              </div>
+                              <input type="text" 
+                              [(ngModel)]="username"  
+                              name="username"
+                              id="username" 
+                              class="form-control" placeholder="User name" />
+                            </div>
+
+                          </div>
+                          
+                        </div>
                         <div class="col-md-4">
                           <div class="form-group">
-                            <label for="status">Status</label>
+                            <label id = "selectedStatus" for="status">Status</label>
                             <ng-select
                               [items]="selectStatus"
                               [(ngModel)]="status"
@@ -181,7 +225,7 @@
                           </div>
                         </div>
   
-                        <div class="col-md-4">
+                        <!-- <div class="col-md-4">
                           <div class="form-group">
                             <label for="role">Role</label>
                             <ng-select
@@ -194,7 +238,7 @@
                               [clearable]="false"
                             ></ng-select>
                           </div>
-                        </div>
+                        </div> -->
   
                         <div class="col-md-4" [hidden]="textPassHide">
                           <label for="basic-default-password1">Password</label>
@@ -647,7 +691,7 @@
                             [disabled]="isLoading"
                             class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1"
                             tabindex="4"
-                            (click)="createUser()"
+                            (click)="create()"
                             rippleEffect
                           >
                             <span
@@ -662,7 +706,7 @@
                             [disabled]="isLoading"
                             class="btn btn-primary mb-1 mb-sm-0 mr-0 mr-sm-1"
                             tabindex="5"
-                            (click)="updateUserAccount()"
+                            (click)="update()"
                             rippleEffect
                           >
                             <span

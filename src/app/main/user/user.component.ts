@@ -5,11 +5,12 @@ import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class UserComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
@@ -41,6 +42,7 @@ export class UserComponent implements OnInit, AfterViewInit {
   constructor(
     private userService: UserService,
     private toastrService: ToastrService,
+    private modalService: NgbModal,
   ) { }
   public selectedOption = 10;
   public searchValue
@@ -119,5 +121,16 @@ export class UserComponent implements OnInit, AfterViewInit {
   async searchAction(event) {
     this.searchTerms.next(event.term)
   }
+  //#endregion
+  //#region Add and update products
+  private ngbModalRef: NgbModalRef;
+  async openModalProductManager(modelName,userID) {
+    this.ngbModalRef = this.modalService.open(modelName, {
+      centered: true,
+      windowClass: 'modal modal-primary',
+      size: 'lg'
+    });
+  }
+
   //#endregion
 }
