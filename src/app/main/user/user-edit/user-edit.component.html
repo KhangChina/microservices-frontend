@@ -133,7 +133,7 @@
   
                         <div class="col-md-4">
                           <div class="form-group">
-                            <label for="status">Phone Number</label>
+                            <label for="phone_number">Phone Number</label>
                             <div class="input-group">
                               <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1"
@@ -195,9 +195,9 @@
                                 <i data-feather="zap"></i>
                                 </button>
                                 <div ngbDropdownMenu>
-                                  <a ngbDropdownItem (click)="onChaneUserName('name')">Name</a>
-                                  <a ngbDropdownItem (click)="onChaneUserName('phone')">Phone</a>
-                                  <a ngbDropdownItem (click)="onChaneUserName('mail')">Mail</a>
+                                  <a ngbDropdownItem (click)="onChangeUserName('name')">Name</a>
+                                  <a ngbDropdownItem (click)="onChangeUserName('phone')">Phone</a>
+                                  <a ngbDropdownItem (click)="onChangeUserName('mail')">Mail</a>
                                 </div>
                               </div>
                               <input type="text" 
@@ -212,7 +212,7 @@
                         </div>
                         <div class="col-md-4">
                           <div class="form-group">
-                            <label for="status">Status</label>
+                            <label id = "selectedStatus" for="status">Status</label>
                             <ng-select
                               [items]="selectStatus"
                               [(ngModel)]="status"

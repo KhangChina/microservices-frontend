@@ -352,18 +352,44 @@ export class UserEditComponent implements OnInit {
     }
     //console.log(data)
   }
+  //#region Logic layout edit and add user
+  onChangeUserName(type: string) {
+    if (type === 'phone') {
 
-  onChaneUserName(type : string)
-  {
-    if(type==='phone')
-      this.username = this.phone_number
-    else if(type === 'mail')
-    {
-      this.username = this.email
+      this.username = this.getUsernameFromPhone(this.phone_number)
     }
-    else
-    {
-      this.username = 'hello_kitty'
+    else if (type === 'mail') {
+      this.username = this.getUsernameFromEmail(this.email)
+    }
+    else {
+      this.username = this.getUserNameFromName(this.first_name, this.last_name)
     }
   }
+  getUsernameFromEmail(email: string) {
+    if(email.length > 0)
+    {
+      const index = email.indexOf('@')
+      if (index !== -1) {
+        return email.substring(0, index)
+      }
+    }
+    return ""
+  }
+  getUserNameFromName(first_name: string, last_name: string) {
+    if(first_name.length  >0 && first_name.length>0)
+    {
+      const username = last_name.toLocaleLowerCase() + '.' + first_name.toLowerCase().replace(' ', '.')
+      return username
+    }
+    return ""
+  }
+  getUsernameFromPhone(phone : string)
+  {
+    if(phone.length > 0)
+    {
+      return "0"+this.phone_number
+    }
+    return ""
+  }
+  //#endregion
 }
