@@ -45,7 +45,7 @@
                 data-feather="plus"
                 class="d-sm-none d-inline-block mr-0 mr-sm-1"
               ></i
-              ><span class="d-none d-sm-inline-block">Add New User</span>
+              ><span class="d-none d-sm-inline-block">Add</span>
             </a>
           </div>
         </div>
@@ -111,7 +111,11 @@
                           <i data-feather="more-vertical"></i>
                         </button>
                         <div ngbDropdownMenu>
-                          <a ngbDropdownItem (click)="openModalProductManager(modalProduct,user.ID)"
+                          <a
+                            ngbDropdownItem
+                            (click)="
+                              openModalProductManager(modalProduct, user.ID)
+                            "
                             ><i data-feather="layers" class="mr-50"></i
                             ><span>Set Product</span></a
                           >
@@ -170,16 +174,40 @@
 <ng-template #modalProduct let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="exampleModalCenterTitle">Products For User</h5>
-    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+    <button
+      type="button"
+      class="close"
+      (click)="modal.dismiss('Cross click')"
+      aria-label="Close"
+    >
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body" tabindex="0" ngbAutofocus>
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <fieldset class="form-group">
+          <ng-select
+            [items]="lstProduct"
+            [(ngModel)]="selectedProduct"
+            [loading]="loadingSelectProduct"
+            name="selectedProduct"
+            bindValue="ID"
+            bindLabel="name"
+            placeholder="Select Product"
+            (search)="searchProduct($event)"
+            [clearable]="false"
+          ></ng-select>
+        </fieldset>
+      </div>
+      <div class="col">
+        <button (click)="updateProductForUser()" type="button" class="btn btn-icon btn-icon rounded-circle btn-success" rippleEffect>
+          <span [data-feather]="'plus-circle'"></span></button>
+      </div>
+    </div>
+
     <div class="table-responsive">
-      <table
-        class="table table-hover-animation"
-        *blockUI="'card-section'"
-      >
+      <table class="table table-hover-animation" *blockUI="'card-section'">
         <thead>
           <tr>
             <th>ProductID</th>
@@ -189,7 +217,7 @@
           </tr>
         </thead>
 
-        <tbody *ngIf="lstUser.length == 0">
+        <tbody *ngIf="lstProduct.length == 0">
           <tr>
             <td valign="top" colspan="8" class="text-center">
               <span [data-feather]="'shopping-bag'"></span>
@@ -198,54 +226,29 @@
           </tr>
         </tbody>
 
-        <tbody *ngIf="lstUser.length > 0">
-          <tr *ngFor="let user of lstUser">
-            <td>{{ user.username }}</td>
-            <td>{{ user.full_name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.phone }}</td>
+        <tbody *ngIf="lstProduct.length > 0">
+          <tr *ngFor="let product of lstProduct">
+            <td>{{ product.ID }}</td>
+            <td>{{ product.name }}</td>
             <td>
               <span
                 class="badge badge-pill mr-1"
                 [ngClass]="{
-                  'badge-light-primary': user.status === 'deleted',
-                  'badge-light-danger': user.status === 'deactivate',
-                  'badge-light-success': user.status === 'active'
+                  'badge-light-primary': product.status === 'deleted',
+                  'badge-light-danger': product.status === 'deactivate',
+                  'badge-light-success': product.status === 'active'
                 }"
-                >{{ user.status }}</span
+                >{{ product.status }}</span
               >
             </td>
             <td class="overflow-hidden">
-              <div ngbDropdown container="body">
-                <button
-                  type="button"
-                  class="btn btn-sm hide-arrow"
-                  ngbDropdownToggle
-                  data-toggle="dropdown"
-                >
-                  <i data-feather="more-vertical"></i>
-                </button>
-                <div ngbDropdownMenu>
-                  <a ngbDropdownItem (click)="openModalProductManager(modalProduct,user.ID)"
-                    ><i data-feather="layers" class="mr-50"></i
-                    ><span>Set Product</span></a
-                  >
-                  <a
-                    ngbDropdownItem
-                    [routerLink]="['/user/edit', user.ID]"
-                    ><i data-feather="edit-2" class="mr-50"></i
-                    ><span>Edit</span></a
-                  >
-                  <a ngbDropdownItem (click)="resetPass(user.ID)"
-                    ><i data-feather="refresh-ccw" class="mr-50"></i
-                    ><span>Reset Pass</span></a
-                  >
-                  <a ngbDropdownItem (click)="delete(user.ID)"
-                    ><i data-feather="trash" class="mr-50"></i
-                    ><span>Delete</span></a
-                  >
-                </div>
-              </div>
+              <button
+                type="button"
+                class="btn btn-icon btn-icon rounded-circle btn-danger"
+                rippleEffect
+              >
+                <span [data-feather]="'trash-2'"></span>
+              </button>
             </td>
           </tr>
         </tbody>
@@ -253,7 +256,12 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="modal.close('Accept click')" rippleEffect>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="modal.close('Accept click')"
+      rippleEffect
+    >
       Accept
     </button>
   </div>
