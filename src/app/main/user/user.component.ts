@@ -133,7 +133,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.searchTerms.next(event.term)
   }
   //#endregion
-  //#region Add and update products
+  //#region Add, Delete and Update products
   private ngbModalRef: NgbModalRef
 
   async openModalProductManager(modelName, userID) {
@@ -144,6 +144,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     });
     this.userID = userID
     await this.loadProduct()
+    await this.loadDataProductForUser()
   }
   private lstProduct = []
   selectedProduct: any
@@ -171,23 +172,22 @@ export class UserComponent implements OnInit, AfterViewInit {
     this.dataSearchProduct = data.term
     this.searchDebounceTimeProduct.next(data.term)
   }
-  private userID : string
+  private userID: string
   async updateProductForUser() {
-    if(!this.userID || !this.selectedProduct)
-    {
+    if (!this.userID || !this.selectedProduct) {
       return
     }
-    const res = await this.userService.updateProductForUser(this.userID,this.selectedProduct)
+    const res = await this.userService.updateProductForUser(this.userID, this.selectedProduct)
     if (res.check === "OK") {
       await Swal.fire({
         icon: 'success',
         title: 'Create Success',
-        text: `Create products ID: ${res.data.ID}`,
+        text: `Create product`,
         customClass: {
           confirmButton: 'btn btn-success'
         }
       })
-      //await this.loadData()
+      await this.loadDataProductForUser()
     }
     else {
       await Swal.fire({
@@ -199,7 +199,49 @@ export class UserComponent implements OnInit, AfterViewInit {
         }
       })
     }
-    this.ngbModalRef.close()
+    //this.ngbModalRef.close()
+  }
+  private lstProductForUser = []
+  async loadDataProductForUser() {
+    const data = await this.userService.getProductByIdUser(this.userID)
+    if (data.check === "ERROR") {
+      this.lstUser = []
+      this.toastrService.error(
+        'Error: ' + data.data,
+        'Load data failed !',
+        { toastClass: 'toast ngx-toastr', closeButton: true }
+      );
+    }
+    else {
+      this.lstProductForUser = data.data.items
+    }
+  }
+  async deleteProductForUser(productID) {
+    if (!this.userID || !productID) {
+      return
+    }
+    const res = await this.userService.deleteProductByIDProductAndUser(this.userID, productID)
+    if (res.check === "OK") {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Delete Success',
+        text: `Create products ID: ${res.data.ID}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+      await this.loadDataProductForUser()
+    }
+    else {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Delete product ERROR',
+        text: `Error: ${JSON.stringify(res.data)}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+    }
   }
   //#endregion
 }

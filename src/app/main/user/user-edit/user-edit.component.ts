@@ -177,7 +177,7 @@ export class UserEditComponent implements OnInit {
   async ngOnInit() {
     this.selectStatus = await this.userService.getUserStatus()
     this.urlLastValue = this.url.substring(this.url.lastIndexOf('/') + 1);
-    if (!isNaN(Number(this.urlLastValue))) {
+    if (/^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-(8|9|a|b|A|B)[0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$/.test(this.urlLastValue)) {
       //Init layout
       await this.UIUserUpdateInit(this.urlLastValue)
       this.ID = this.urlLastValue
@@ -366,8 +366,7 @@ export class UserEditComponent implements OnInit {
     }
   }
   getUsernameFromEmail(email: string) {
-    if(email.length > 0)
-    {
+    if (email.length > 0) {
       const index = email.indexOf('@')
       if (index !== -1) {
         return email.substring(0, index)
@@ -376,18 +375,15 @@ export class UserEditComponent implements OnInit {
     return ""
   }
   getUserNameFromName(first_name: string, last_name: string) {
-    if(first_name.length  >0 && first_name.length>0)
-    {
+    if (first_name.length > 0 && first_name.length > 0) {
       const username = last_name.toLocaleLowerCase() + '.' + first_name.toLowerCase().replace(' ', '.')
       return username
     }
     return ""
   }
-  getUsernameFromPhone(phone : string)
-  {
-    if(phone.length > 0)
-    {
-      return "0"+this.phone_number
+  getUsernameFromPhone(phone: string) {
+    if (phone.length > 0) {
+      return "0" + this.phone_number
     }
     return ""
   }

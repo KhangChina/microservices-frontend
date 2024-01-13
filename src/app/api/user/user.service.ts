@@ -76,7 +76,7 @@ export class UserService {
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${environment.apiUrl}/user/product/${environment.productID}`,
+      url: `${environment.apiUrl}/user`,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
@@ -159,6 +159,56 @@ export class UserService {
   {
     let config = {
       method: 'patch',
+      maxBodyLength: Infinity,
+      url: `${environment.apiUrl}/user/${ID}/product/${productID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    };
+    try {
+      const response = await axios(config)
+      if (response.data.statusCode === 200) {
+        return {
+          check: 'OK',
+          data: response.data.data
+        }
+      }
+    } catch (error) {
+      return {
+        check: 'ERROR',
+        data: error.response.data.message
+      }
+    }
+  }
+  async getProductByIdUser(id: string) {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `${environment.apiUrl}/user/${id}/product`,
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    };
+    try {
+      const response = await axios(config)
+      if (response.data.statusCode === 200) {
+        return {
+          check: 'OK',
+          data: response.data.data
+        }
+      }
+    } catch (error) {
+      return {
+        check: 'ERROR',
+        data: error.response.data.message
+      }
+    }
+  }
+  async deleteProductByIDProductAndUser(ID : string ,productID: string)
+  {
+    let config = {
+      method: 'delete',
       maxBodyLength: Infinity,
       url: `${environment.apiUrl}/user/${ID}/product/${productID}`,
       headers: {

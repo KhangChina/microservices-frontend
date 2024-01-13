@@ -65,8 +65,8 @@
                     <th>Full Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Verified Email</th>
-                    <th>Verified Phone</th>
+                    <!-- <th>Verified Email</th>
+                    <th>Verified Phone</th> -->
                     <th>Status</th>
                     <th>Action</th>
                   </tr>
@@ -85,10 +85,51 @@
                   <tr *ngFor="let user of lstUser">
                     <td>{{ user.username }}</td>
                     <td>{{ user.full_name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.phone }}</td>
-                    <td>{{ user.verified_email }}</td>
-                    <td>{{ user.verified_phone }}</td>
+                    <td>
+                      {{ user.email }}
+
+                      <div class="avatar bg-success avatar-sm" *ngIf="user.verified_email">
+                        <div class="avatar-content">
+                          <span
+                            [data-feather]="'check'"
+                            [class]="'avatar-icon'"
+                          ></span>
+                        </div>
+                      </div>
+
+                      <div class="avatar bg-danger avatar-sm" *ngIf="!user.verified_email">
+                        <div class="avatar-content">
+                          <span
+                            [data-feather]="'x-circle'"
+                            [class]="'avatar-icon'"
+                          ></span>
+                        </div>
+                      </div>
+
+                    </td>
+                    <td>
+                      {{ user.phone }}
+                      <div class="avatar bg-success avatar-sm" *ngIf="user.verified_phone">
+                        <div class="avatar-content">
+                          <span
+                            [data-feather]="'check'"
+                            [class]="'avatar-icon'"
+                          ></span>
+                        </div>
+                      </div>
+
+                      <div class="avatar bg-danger avatar-sm" *ngIf="!user.verified_phone">
+                        <div class="avatar-content">
+                          <span
+                            [data-feather]="'x-circle'"
+                            [class]="'avatar-icon'"
+                          ></span>
+                        </div>
+                      </div>
+
+                    </td>
+                    <!-- <td>{{ user.verified_email }}</td>
+                    <td>{{ user.verified_phone }}</td> -->
                     <td>
                       <span
                         class="badge badge-pill mr-1"
@@ -201,8 +242,14 @@
         </fieldset>
       </div>
       <div class="col">
-        <button (click)="updateProductForUser()" type="button" class="btn btn-icon btn-icon rounded-circle btn-success" rippleEffect>
-          <span [data-feather]="'plus-circle'"></span></button>
+        <button
+          (click)="updateProductForUser()"
+          type="button"
+          class="btn btn-icon btn-icon rounded-circle btn-success"
+          rippleEffect
+        >
+          <span [data-feather]="'plus-circle'"></span>
+        </button>
       </div>
     </div>
 
@@ -210,14 +257,14 @@
       <table class="table table-hover-animation" *blockUI="'card-section'">
         <thead>
           <tr>
-            <th>ProductID</th>
+            <th>Product ID</th>
             <th>Product Name</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
 
-        <tbody *ngIf="lstProduct.length == 0">
+        <tbody *ngIf="lstProductForUser.length == 0">
           <tr>
             <td valign="top" colspan="8" class="text-center">
               <span [data-feather]="'shopping-bag'"></span>
@@ -226,8 +273,8 @@
           </tr>
         </tbody>
 
-        <tbody *ngIf="lstProduct.length > 0">
-          <tr *ngFor="let product of lstProduct">
+        <tbody *ngIf="lstProductForUser.length > 0">
+          <tr *ngFor="let product of lstProductForUser">
             <td>{{ product.ID }}</td>
             <td>{{ product.name }}</td>
             <td>
@@ -243,6 +290,7 @@
             </td>
             <td class="overflow-hidden">
               <button
+                (click)="deleteProductForUser(product.ID)"
                 type="button"
                 class="btn btn-icon btn-icon rounded-circle btn-danger"
                 rippleEffect
