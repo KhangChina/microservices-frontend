@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ProductService } from 'app/api/product/product.service';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -32,17 +33,27 @@ export class UserComponent implements OnInit, AfterViewInit {
         ]
       }
     }
+    //Search User
     this.searchTerms.pipe(
       debounceTime(500)
     ).subscribe(async value => {
       console.log(value)
       await this.loadData()
     });
+    //Search Product
+    this.searchDebounceTimeProduct.pipe(
+      debounceTime(500)
+    ).subscribe(async value => {
+      console.log(value)
+      await this.loadProduct()
+    });
+
   }
   constructor(
     private userService: UserService,
     private toastrService: ToastrService,
     private modalService: NgbModal,
+    private productService: ProductService
   ) { }
   public selectedOption = 10;
   public searchValue
@@ -123,14 +134,72 @@ export class UserComponent implements OnInit, AfterViewInit {
   }
   //#endregion
   //#region Add and update products
-  private ngbModalRef: NgbModalRef;
-  async openModalProductManager(modelName,userID) {
+  private ngbModalRef: NgbModalRef
+
+  async openModalProductManager(modelName, userID) {
     this.ngbModalRef = this.modalService.open(modelName, {
       centered: true,
       windowClass: 'modal modal-primary',
       size: 'lg'
     });
+    this.userID = userID
+    await this.loadProduct()
   }
-
+  private lstProduct = []
+  selectedProduct: any
+  private loadingSelectProduct: boolean
+  async loadProduct() {
+    this.loadingSelectProduct = true
+    const data = await this.productService.getAll(10, 1, this.dataSearchProduct)
+    this.loadingSelectProduct = false
+    if (data.check === "ERROR") {
+      this.lstProduct = []
+      this.toastrService.error(
+        'Error: ' + data.data,
+        'Load data product failed !',
+        { toastClass: 'toast ngx-toastr', closeButton: true }
+      );
+    }
+    else {
+      this.lstProduct = data.data.items
+    }
+  }
+  searchDebounceTimeProduct = new Subject<string>();
+  dataSearchProduct: string = ""
+  async searchProduct(data) {
+    //Get dada Search
+    this.dataSearchProduct = data.term
+    this.searchDebounceTimeProduct.next(data.term)
+  }
+  private userID : string
+  async updateProductForUser() {
+    if(!this.userID || !this.selectedProduct)
+    {
+      return
+    }
+    const res = await this.userService.updateProductForUser(this.userID,this.selectedProduct)
+    if (res.check === "OK") {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Create Success',
+        text: `Create products ID: ${res.data.ID}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+      //await this.loadData()
+    }
+    else {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Update product ERROR',
+        text: `Error: ${JSON.stringify(res.data)}`,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      })
+    }
+    this.ngbModalRef.close()
+  }
   //#endregion
 }

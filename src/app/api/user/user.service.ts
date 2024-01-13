@@ -100,11 +100,6 @@ export class UserService {
     }
   }
   async update(ID: string, data: any) {
-    // let data = JSON.stringify({
-    //   "name": product.name,
-    //   "note": product.note,
-    //   "status": product.status
-    // });
 
     let config = {
       method: 'patch',
@@ -159,5 +154,31 @@ export class UserService {
   async getUserStatus()
   {
     return userStatus
+  }
+  async updateProductForUser(ID : string ,productID: string)
+  {
+    let config = {
+      method: 'patch',
+      maxBodyLength: Infinity,
+      url: `${environment.apiUrl}/user/${ID}/product/${productID}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    };
+    try {
+      const response = await axios(config)
+      if (response.data.statusCode === 200) {
+        return {
+          check: 'OK',
+          data: response.data.data
+        }
+      }
+    } catch (error) {
+      return {
+        check: 'ERROR',
+        data: error.response.data.message
+      }
+    }
   }
 }
